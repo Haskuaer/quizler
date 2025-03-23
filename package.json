@@ -1,0 +1,23 @@
+{
+  "name": "quizler",
+  "version": "1.0.0",
+  "description": "Quiz web app",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node app.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Haskuaer/quizlerTI.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Haskuaer/quizlerTI/issues"
+  },
+  "homepage": "https://github.com/Haskuaer/quizlerTI#readme",
+  "dependencies": {
+    "express": "^4.21.2"
+  }
+}
