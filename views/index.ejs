@@ -4,4 +4,14 @@
 </head>
 <body>
     <h1>Quizler</h1>
+    <ul>
+    <% if( user ) { %>
+        <p>Hello <%= user.username %></p>
+        <li><a href='/logout'>Logout</a></li>
+        <li><a href='/user'>Profile</a></li>
+    <% } else { %>
+        <li><a href='/login'>Login</a></li>
+        <li><a href='/register'>Register</a></li>
+    <% } %>
+    </ul>
 </body>

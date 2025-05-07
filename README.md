@@ -11,3 +11,8 @@ Authorized user:
 Admin:
  - managing quizes
  - managing users
+
+ Installed packages:
+  - express
+  - nodemon
+  - ejs
