@@ -1,10 +1,12 @@
+require('dotenv').config();
+
 const express = require('express');
 const path = require('path');
+const mongoose = require('./util/mongodb');
 
-const adminRouter = require('./routes/admin');
+const authController = require('./routes/auth');
 
 const app = express();
-const PORT = 3000;
 
 // SET ENGINE
 app.set('view engine', 'ejs');
@@ -17,8 +19,8 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use(express.urlencoded({ extended: true }));
 
 //ROUTES
-app.use('/', adminRouter);
+app.use('/', authController);
 
-app.listen(PORT, () => {
-  console.log(`Server is running at http://localhost:${PORT}`);
+app.listen(process.env.PORT, () => {
+  console.log(`Server is running at http://localhost:${process.env.PORT}`);
 });

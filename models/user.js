@@ -1,16 +1,35 @@
-class User {
-    constructor(username, password){
-        this.username = username;
-        this.password = password;
+const mongoose = require('../util/mongodb');
+const bcrypt = require('bcrypt');
+
+const userSchema = new mongoose.Schema({
+    username: {
+        type: String,
+        required: true,
+        unique: true
+    },
+    password: {
+        type: String,
+        required: true
+    },
+    role: {
+        type: String,
+        enum: ['standard', 'admin'],
+        default: 'standard'
     }
+});
 
-    describe(){
-        return `User: ${this.username}`;
-    }
-}
+//HASH PASSWORD
+userSchema.pre('save', async function (next) {
+    if (!this.isModified('password')) return next();
+    this.password = await bcrypt.hash(this.password, 12);
+    next();
+});
 
-const user = new User('user', 'user');
+//COMPARE PASSWORDS
+userSchema.methods.comparePassword = function (candidatePassword) {
+    return bcrypt.compare(candidatePassword, this.password);
+};
 
-let users = [user];
+const User = mongoose.model('User', userSchema);
 
-module.exports = users;
+module.exports = User;
