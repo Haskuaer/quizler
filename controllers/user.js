@@ -1,3 +1,7 @@
 const getUser = (req, res) => {
-    res.render('user', { user: user })
+    res.render('user')
 }
+
+module.exports = {
+    getUser
+};

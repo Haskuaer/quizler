@@ -1,7 +1,8 @@
+const jwt = require('jsonwebtoken');
 const User = require('../models/User');
 
 const getHome = (req, res) => {
-    res.render('index', { user: null });
+    res.render('index');
 };
 
 const getLogin = (req, res) => {
@@ -27,7 +28,15 @@ const login = async (req, res) => {
             return res.render('login', { error: 'Invalid password' });
         }
 
-        res.render('index', { user });
+        const token = jwt.sign(
+            { id: user._id, username: user.username, role: user.role }, 
+            process.env.JWT_SECRET,
+            { expiresIn: '1h' }
+        );
+
+        res.cookie( 'token', token, { httpOnly: true });
+
+        res.redirect('/');
 
     } catch (err) {
         
@@ -60,7 +69,8 @@ const register = async (req, res) => {
 };
 
 const logout = (req, res) => {
-    res.render('index', { user: null });
+    res.clearCookie('token');
+    res.redirect('/');
 }
 
 module.exports = {

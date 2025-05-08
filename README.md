@@ -16,3 +16,6 @@ Admin:
   - express
   - nodemon
   - ejs
+  - mongodb
+  - jsonwebtoken
+  - cookie-parser
