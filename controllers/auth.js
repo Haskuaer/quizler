@@ -1,5 +1,8 @@
+require('dotenv').config();
+
 const jwt = require('jsonwebtoken');
 const User = require('../models/User');
+const { generateAccessToken, generateRefreshToken } = require('../util/token');
 
 const getHome = (req, res) => {
     res.render('index');
@@ -28,13 +31,11 @@ const login = async (req, res) => {
             return res.render('login', { error: 'Invalid password' });
         }
 
-        const token = jwt.sign(
-            { id: user._id, username: user.username, role: user.role }, 
-            process.env.JWT_SECRET,
-            { expiresIn: '1h' }
-        );
+        const accessToken = generateAccessToken(user);
+        const refreshToken = generateRefreshToken(user);
 
-        res.cookie( 'token', token, { httpOnly: true });
+        res.cookie( 'token', accessToken, { httpOnly: true });
+        res.cookie('refreshToken', refreshToken, { httpOnly: true });
 
         res.redirect('/');
 
@@ -68,8 +69,28 @@ const register = async (req, res) => {
     }
 };
 
+const refreshToken = (req, res) => {
+
+    const token = req.cookies.refreshToken;
+
+    if (!token) return res.status(401).redirect('/', { message: 'No refresh token' });
+
+    try {
+
+        const payload = jwt.verify(token, process.env.JWT_REFRESH_SECRET);
+        const accessToken = generateAccessToken(payload);
+
+        res.cookie('token', accessToken, { httpOnly: true });
+        res.redirect('/', { message: 'Access token refreshed' });
+
+    } catch (err) {
+        return res.status(403).redirect('/', { message: 'Invalid refresh token' });
+    }
+}
+
 const logout = (req, res) => {
     res.clearCookie('token');
+    res.clearCookie('refreshToken');
     res.redirect('/');
 }
 
@@ -79,5 +100,6 @@ module.exports = {
     getRegister,
     login,
     register,
+    refreshToken,
     logout
 };
