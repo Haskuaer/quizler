@@ -12,7 +12,6 @@ const setUser = (req, res, next) => {
         const decoded = jwt.verify(token, process.env.JWT_SECRET);
         req.user = decoded;
         res.locals.user = decoded;
-        console.log('User: ' + res.locals.user); 
 
     } catch (err) {
         res.locals.user = null;

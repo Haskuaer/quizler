@@ -9,6 +9,7 @@ const setUser = require('./middleware/setUser');
 //ROUTERS
 const authRouter = require('./routes/auth');
 const userRouter = require('./routes/user');
+const adminRouter = require('./routes/admin');
 
 const app = express();
 
@@ -29,6 +30,7 @@ app.use(express.urlencoded({ extended: true }));
 //ROUTES
 app.use('/', authRouter);
 app.use('/', userRouter);
+app.use('/', adminRouter);
 
 app.listen(process.env.PORT, () => {
   console.log(`Server is running at http://localhost:${process.env.PORT}`);

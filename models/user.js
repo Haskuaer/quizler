@@ -1,4 +1,4 @@
-const mongoose = require('../util/mongodb');
+const mongoose = require('mongoose');
 const bcrypt = require('bcrypt');
 
 const userSchema = new mongoose.Schema({
@@ -15,6 +15,10 @@ const userSchema = new mongoose.Schema({
         type: String,
         enum: ['standard', 'admin'],
         default: 'standard'
+    },
+    active: {
+        type: Boolean,
+        default: true
     }
 });
 

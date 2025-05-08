@@ -1,0 +1,41 @@
+<h1>Panel użytkowników</h1>
+<table border="1">
+  <tr>
+    <th>Username</th>
+    <th>Rola</th>
+    <th>Status</th>
+    <th>Akcje</th>
+  </tr>
+  <% users.forEach(u => { %>
+    <tr>
+      <% if (u.role === 'admin') { %>
+        <td><%= u.username %></td>
+        <td><%= u.role %></td>
+        <td><%= u.active ? 'Aktywny' : 'Zablokowany' %></td>
+        <td><em>Nie można edytować administratora</em></td>
+      <% } else { %>
+      <form action="/admin/user/<%= u._id %>/update" method="POST">
+        <td><input name="username" value="<%= u.username %>"/></td>
+        <td>
+          <select name="role">
+            <option value="standard" <%= u.role === 'standard' ? 'selected' : '' %>>Standard</option>
+            <option value="admin" <%= u.role === 'admin' ? 'selected' : '' %>>Admin</option>
+          </select>
+        </td>
+        <td><%= u.active ? 'Aktywny' : 'Zablokowany' %></td>
+        <td>
+          <input type="password" name="password" placeholder="Nowe hasło" />
+          <button type="submit">💾</button>
+        </form>
+        <form action="/admin/user/<%= u._id %>/toggle-active" method="POST" style="display:inline;">
+          <button type="submit"><%= u.active ? '🔒 Zablokuj' : '🔓 Odblokuj' %></button>
+        </form>
+        <form action="/admin/user/<%= u._id %>/delete" method="POST" style="display:inline;">
+          <button type="submit" onclick="return confirm('Na pewno usunąć?')">🗑️ Usuń</button>
+        </form>
+      </td>
+      <% } %>
+    </tr>
+  <% }) %>
+</table>
+<a href='/admin/dashboard'>Back</a>
