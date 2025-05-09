@@ -15,7 +15,11 @@ Admin:
  Installed packages:
   - express
   - nodemon
+  - dotenv
   - ejs
   - mongodb
   - jsonwebtoken
+  - bcrypt
   - cookie-parser
+  - express-session //FOR ERRORS
+  - express-flash //FOR ERRORS

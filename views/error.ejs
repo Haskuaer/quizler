@@ -1,7 +1,3 @@
-<!DOCTYPE html>
-<head>
-    <title>Quizler</title>
-</head>
-<body>
-    <h1>Error 404</h1>
-</body>
+<h1>Error <%= typeof status !== 'undefined' ? status : 500 %></h1>
+<p><%= message || 'Something went wrong' %></p>
+<a href="/">Go back</a>

@@ -21,5 +21,9 @@
         <br>
         <button type="submit">Sign in</button>
     </form>
+    <% if (messages.error) { %>
+        <p style="color:red;"><%= messages.error[0] %></div>
+    <% } %>
+    <a href="/">Back</a>
 </body>
 </html>
