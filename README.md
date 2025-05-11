@@ -23,3 +23,4 @@ Admin:
   - cookie-parser
   - express-session //FOR ERRORS
   - express-flash //FOR ERRORS
+  - express-validator
