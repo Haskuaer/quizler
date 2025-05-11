@@ -2,10 +2,13 @@ require('dotenv').config();
 
 const express = require('express');
 const path = require('path');
+const helmet = require('helmet');
+const csrf = require('csurf');
 const mongoose = require('./util/mongodb');
 const cookieParser = require('cookie-parser');
 const session = require('express-session');
 const flash = require('express-flash');
+const setCsfr = require('./middleware/setCsrf');
 const setUser = require('./middleware/setUser');
 
 
@@ -16,6 +19,9 @@ const adminRouter = require('./routes/admin');
 
 const app = express();
 
+//SECURITY
+app.use(helmet());
+
 // SET ENGINE
 app.set('view engine', 'ejs');
 // SET VIEWS PATH
@@ -23,12 +29,11 @@ app.set('views', path.join(__dirname, 'views'));
 // SET STATIC PATH
 app.use(express.static(path.join(__dirname, 'public')));
 
-//HANDLE COOKIES
-app.use(cookieParser());
-app.use(setUser);
-
 //ALLOW POST
 app.use(express.urlencoded({ extended: true }));
+
+//COOKIE HANDLING
+app.use(cookieParser());
 
 //SESSION FOR FLASH
 app.use(session({
@@ -39,6 +44,13 @@ app.use(session({
 
 //FLASH
 app.use(flash());
+
+//LOCALS & CSRF
+app.use(csrf({ cookie: true }));
+app.use(setUser);
+
+//SET CSRF TOKEN
+app.use(setCsfr);
 
 //ROUTES
 app.use('/', authRouter);

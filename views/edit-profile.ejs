@@ -1,6 +1,7 @@
 <%- include('refresh-token') %>
 <h1>Edycja profilu</h1>
 <form method="POST" action="/profile/edit">
+  <input type="hidden" name="_csrf" value="<%= csrfToken %>">
   <label>Nazwa użytkownika:</label><br/>
   <input name="username" value="<%= user.username %>"/><br/><br/>
 

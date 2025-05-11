@@ -1,9 +1,23 @@
 const express = require('express');
 const router = express.Router();
-const authController = require('../controllers/auth');
-const { authenticateJWT } = require('../middleware/authenticateJWT');
+const rateLimit = require('express-rate-limit');
 const { registerValidator, loginValidator } = require('../middleware/validators/authValidator');
 const validate = require('../middleware/validators/validate');
+const { authenticateJWT } = require('../middleware/authenticateJWT');
+const authController = require('../controllers/auth');
+
+const loginLimit = rateLimit({
+    windowMs: 15 * 60 * 1000,
+    max: 5,
+    message: 'Too many login requests. Try again after 15min',
+});
+
+const registerLimit = rateLimit({
+    windowMs: 60 * 60 * 1000,
+    max: 10,
+    message: 'Too many register requests. Try again later',
+});
+
 
 router.get('/', authController.getHome);
 
@@ -15,9 +29,9 @@ router.get('/login', authController.getLogin);
 
 router.get('/register',  authController.getRegister);
 
-router.post('/authorize', loginValidator, validate('login'), authController.login);
+router.post('/authorize', loginLimit, loginValidator, validate('login'),  authController.login);
 
-router.post('/create-user', registerValidator, validate('register'), authController.register);
+router.post('/create-user', registerLimit, registerValidator, validate('register'), authController.register);
 
 router.get('/refresh-token', authController.refreshToken);
 
