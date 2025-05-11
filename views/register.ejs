@@ -10,7 +10,7 @@
         <li><a href='/login'>Register</a></li>
     </ul>
     <form action="/create-user" method="POST">
-        <input type="hidden" name="_csfr" value="<%= csrfToken %>">
+        <input type="hidden" name="_csrf" value="<%= csrfToken %>">
         <label for="username">Username:</label>
         <input type="text" name="username" id="username" required>
         <br>
