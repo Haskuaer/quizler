@@ -17,9 +17,10 @@ Admin:
   - nodemon
   - dotenv
   - ejs
-  - mongodb
-  - jsonwebtoken
-  - bcrypt
-  - cookie-parser
+  - mongodb //DATA
+  - jsonwebtoken //SECURITY
+  - bcrypt //SECURITY
+  - helmet //SECURITY
+  - cookie-parser //DATA
   - express-session //FOR ERRORS
   - express-flash //FOR ERRORS
