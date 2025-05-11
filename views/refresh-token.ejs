@@ -1,6 +1,13 @@
-    <iframe src="/refresh-token" style="display: none;" id="refreshFrame"></iframe>
-    <script>
-        setInterval(() => {
-            document.getElementById('refreshFrame').src = '/refresh-token';
-        }, 55000);
-    </script>
+<script>
+    setInterval(() => {
+        fetch('/refresh-token', {
+            method: 'POST',
+            credentials: 'same-origin',
+            headers: {
+                'X-CSRF-Token': '<%= csrfToken %>'
+            }
+        }).then(res => {
+            if (!res.ok) console.warn('Refresh token failed: ', res.status);
+        }).catch(console.error);
+    }, 55000);
+</script>

@@ -32,8 +32,24 @@ const login = asyncHandler(async (req, res) => {
     const accessToken = generateAccessToken(user);
     const refreshToken = generateRefreshToken(user);
 
-    res.cookie( 'token', accessToken, { httpOnly: true, maxAge: 15*60*1000 });
-    res.cookie('refreshToken', refreshToken, { httpOnly: true });
+    res.cookie( 
+        'token', 
+        accessToken, 
+        { 
+            httpOnly: true, 
+            sameSite: 'lax',
+            secure: false,
+            maxAge: 15*60*1000 
+        });
+
+    res.cookie(
+        'refreshToken', 
+        refreshToken, 
+        { 
+            httpOnly: true,
+            sameSite: 'lax',
+            secure: false
+        });
 
     res.redirect('/');
 });
@@ -64,7 +80,15 @@ const refreshToken = asyncHandler(async (req, res) => {
     if (!user) throw new AppError('User not found', STATUS.NOT_FOUND);
 
     const accessToken = generateAccessToken(payload);
-    res.cookie('token', accessToken, { httpOnly: true, maxAge: 15*60*1000 });
+    res.cookie(
+        'token', 
+        accessToken, 
+        { 
+            httpOnly: true,
+            sameSite: 'lax',
+            secure: false,
+            maxAge: 15*60*1000 
+        });
     res.sendStatus(204);
 });
 

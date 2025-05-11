@@ -46,8 +46,8 @@ app.use(session({
 app.use(flash());
 
 //LOCALS & CSRF
-app.use(csrf({ cookie: true }));
 app.use(setUser);
+app.use(csrf({ cookie: true }));
 
 //SET CSRF TOKEN
 app.use(setCsfr);
