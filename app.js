@@ -2,6 +2,7 @@ require('dotenv').config();
 
 const express = require('express');
 const path = require('path');
+const helmet = require('helmet');
 const mongoose = require('./util/mongodb');
 const cookieParser = require('cookie-parser');
 const session = require('express-session');
@@ -15,6 +16,8 @@ const userRouter = require('./routes/user');
 const adminRouter = require('./routes/admin');
 
 const app = express();
+
+app.use(helmet());
 
 // SET ENGINE
 app.set('view engine', 'ejs');
