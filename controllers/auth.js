@@ -33,8 +33,7 @@ const login = asyncHandler(async (req, res) => {
     const refreshToken = generateRefreshToken(user);
 
     res.cookie( 
-        'token', 
-        accessToken, 
+        'token', accessToken, 
         { 
             httpOnly: true, 
             sameSite: 'lax',
@@ -43,8 +42,7 @@ const login = asyncHandler(async (req, res) => {
         });
 
     res.cookie(
-        'refreshToken', 
-        refreshToken, 
+        'refreshToken', refreshToken, 
         { 
             httpOnly: true,
             sameSite: 'lax',
@@ -72,6 +70,9 @@ const register = asyncHandler (async (req, res) => {
 
 const refreshToken = asyncHandler(async (req, res) => {
 
+    console.log("Token: " + req.cookie.token);
+    console.log("Refresh Token: " + req.cookie.refreshToken);
+
     const token = req.cookies.refreshToken;
     if (!token) throw new AppError('No refresh token', STATUS.UNAUTHORIZED);
 
@@ -79,10 +80,9 @@ const refreshToken = asyncHandler(async (req, res) => {
     const user = await User.findById(payload.id);
     if (!user) throw new AppError('User not found', STATUS.NOT_FOUND);
 
-    const accessToken = generateAccessToken(payload);
+    const accessToken = generateAccessToken(user);
     res.cookie(
-        'token', 
-        accessToken, 
+        'token', accessToken, 
         { 
             httpOnly: true,
             sameSite: 'lax',
