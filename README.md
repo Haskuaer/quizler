@@ -21,6 +21,7 @@ Admin:
   - jsonwebtoken //SECURITY
   - bcrypt //SECURITY
   - helmet //SECURITY
+  - csrf
   - cookie-parser //DATA
   - express-session //FOR ERRORS
   - express-flash //FOR ERRORS

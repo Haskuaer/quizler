@@ -16,6 +16,7 @@
         <td><em>Nie można edytować administratora</em></td>
       <% } else { %>
       <form action="/admin/user/<%= u._id %>/update" method="POST">
+        <input type="hidden" name="_csfr" value="<%= csrfToken %>">
         <td><input name="username" value="<%= u.username %>"/></td>
         <td>
           <select name="role">
@@ -29,9 +30,11 @@
           <button type="submit">💾</button>
         </form>
         <form action="/admin/user/<%= u._id %>/toggle-active" method="POST" style="display:inline;">
+          <input type="hidden" name="_csfr" value="<%= csrfToken %>">
           <button type="submit"><%= u.active ? '🔒 Zablokuj' : '🔓 Odblokuj' %></button>
         </form>
         <form action="/admin/user/<%= u._id %>/delete" method="POST" style="display:inline;">
+          <input type="hidden" name="_csfr" value="<%= csrfToken %>">
           <button type="submit" onclick="return confirm('Na pewno usunąć?')">🗑️ Usuń</button>
         </form>
       </td>
