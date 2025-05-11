@@ -7,7 +7,7 @@ module.exports = (req, res, next) => {
         try {
             if (!res.locals.csrfToken){
             res.locals.csrfToken = req.csrfToken();
-            console.log('CSRF Token: ' + res.locals.csrfToken);
+            //console.log('CSRF Token: ' + res.locals.csrfToken);
             }
         } catch (err) {
             console.error('CSRF token error: ', err);

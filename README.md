@@ -25,3 +25,4 @@ Admin:
   - cookie-parser //DATA
   - express-session //FOR ERRORS
   - express-flash //FOR ERRORS
+  - express-rate-limit //SECURITY

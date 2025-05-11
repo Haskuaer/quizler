@@ -1,6 +1,5 @@
 <form action="/authorize" method="POST">
     <input type="hidden" name="_csrf" value="<%= csrfToken %>">
-    <% console.log('CSRF EJS: ' + csrfToken) %>
     <label for="username">Username:</label>
     <input type="text" name="username" id="username" required>
     <br>
