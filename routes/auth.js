@@ -29,6 +29,8 @@ router.get('/login', authController.getLogin);
 
 router.get('/register',  authController.getRegister);
 
+router.get('/forgot-password', authController.getForgotPassword);
+
 router.post('/authorize', loginLimit, loginValidator, validate('login'),  authController.login);
 
 router.post('/create-user', registerLimit, registerValidator, validate('register'), authController.register);
@@ -36,5 +38,11 @@ router.post('/create-user', registerLimit, registerValidator, validate('register
 router.get('/refresh-token', authController.refreshToken);
 
 router.get('/logout', authController.logout);
+
+router.post('/forgot-password', authController.forgotPassword);
+
+router.get('/reset-password/:token', authController.getResetPassword);
+
+router.post('/reset-password/:token', authController.resetPassword);
 
 module.exports = router;

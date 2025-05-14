@@ -1,6 +1,7 @@
 require('dotenv').config();
 
 const jwt = require('jsonwebtoken');
+const crypto = require('crypto');
 const User = require('../models/User');
 const { generateAccessToken, generateRefreshToken } = require('../util/token');
 const asyncHandler = require('../middleware/asyncHandler');
@@ -17,6 +18,17 @@ const getLogin = (req, res) => {
 
 const getRegister = (req, res) => {
     res.render('register');
+};
+
+const getForgotPassword = (req, res) => {
+    res.render('passwordReset/forgot-password');
+};
+
+const getResetPassword = (req, res) => {
+
+    const token = req.params.token;
+
+    res.render('passwordReset/reset-password', { token: token });
 };
 
 const login = asyncHandler(async (req, res) => {
@@ -99,12 +111,47 @@ const logout = (req, res) => {
     res.redirect('/');
 }
 
+const forgotPassword = asyncHandler( async (req, res, next) => {
+
+    const user = await User.findOne({ username: req.body.username });
+    if (!user) throw new AppError('User not found', STATUS.NOT_FOUND);
+
+    const token = crypto.randomBytes(32).toString('hex');
+    user.resetToken = token;
+    user.resetTokenExpiration = Date.now() + 15 * 60 * 1000;
+    await user.save();
+
+    res.render('passwordReset/forgot-link', { link: `/reset-password/${token}`});
+})
+
+const resetPassword = asyncHandler( async ( req, res, next) => {
+
+    const { oldPassword, newPassword, confirmPassword } = req.body;
+    const user = await User.findOne({
+        resetToken: req.params.token,
+        resetTokenExpiration: { $gt: Date.now() }
+    });
+
+    if (!user) throw new AppError('Token expired', STATUS.FORBIDEN);
+
+    user.password = newPassword;
+    user.resetToken = undefined;
+    user.resetTokenExpiration = undefined;
+    await user.save();
+
+    res.redirect('/login');
+})
+
 module.exports = {
     getHome,
     getLogin,
     getRegister,
+    getForgotPassword,
     login,
     register,
     refreshToken,
-    logout
+    logout,
+    forgotPassword,
+    getResetPassword,
+    resetPassword
 };

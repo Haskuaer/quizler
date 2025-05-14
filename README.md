@@ -27,3 +27,4 @@ Admin:
   - express-flash //FOR ERRORS
   - express-rate-limit //SECURITY
   - express-validator
+  - crypto //SECURITY
