@@ -14,8 +14,9 @@ const setUser = require('./middleware/setUser');
 
 //ROUTERS
 const authRouter = require('./routes/auth');
-const userRouter = require('./routes/user');
 const adminRouter = require('./routes/admin');
+const userRouter = require('./routes/user');
+const quizRouter = require('./routes/quiz');
 
 const app = express();
 
@@ -54,8 +55,9 @@ app.use(setCsfr);
 
 //ROUTES
 app.use('/', authRouter);
-app.use('/', userRouter);
 app.use('/', adminRouter);
+app.use('/', userRouter);
+app.use('/', quizRouter);
 
 app.use((req, res) => {
   res.status(404).render('error', {
