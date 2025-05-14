@@ -5,6 +5,7 @@ const crypto = require('crypto');
 const User = require('../models/User');
 const { generateAccessToken, generateRefreshToken } = require('../util/token');
 const asyncHandler = require('../middleware/asyncHandler');
+const logAction = require('../util/logger');
 const STATUS = require('../util/httpStatus');
 const AppError = require('../util/AppError');
 
@@ -61,6 +62,7 @@ const login = asyncHandler(async (req, res) => {
             secure: false
         });
 
+    logAction(user.username, 'Logged in');
     res.redirect('/');
 });
 
@@ -77,6 +79,7 @@ const register = asyncHandler (async (req, res) => {
     const user = new User({ username, password });
     await user.save();
 
+    logAction(user.username, 'Registered');
     res.render('index', { user });
 }); 
 
@@ -106,6 +109,7 @@ const refreshToken = asyncHandler(async (req, res) => {
 
 const logout = (req, res) => {
 
+    logAction(req.user?.username || res.locals.user?.username, 'Logged out');
     res.clearCookie('token');
     res.clearCookie('refreshToken');
     res.redirect('/');
@@ -121,6 +125,7 @@ const forgotPassword = asyncHandler( async (req, res, next) => {
     user.resetTokenExpiration = Date.now() + 15 * 60 * 1000;
     await user.save();
 
+    logAction(user.username, 'Forgot password');
     res.render('passwordReset/forgot-link', { link: `/reset-password/${token}`});
 })
 
@@ -139,6 +144,7 @@ const resetPassword = asyncHandler( async ( req, res, next) => {
     user.resetTokenExpiration = undefined;
     await user.save();
 
+    logAction(user.username, user.role, 'Reseted password');
     res.redirect('/login');
 })
 
