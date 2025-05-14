@@ -1,9 +1,12 @@
+const AppError = require('../util/AppError');
+const STATUS = require('../util/httpStatus');
+
 function isAdmin(req, res, next) {
     if (req.user && req.user.role === 'admin') {
         return next();
     }
 
-    return res.status(401).render('error', { message: 'Insufficient permissions' }); 
+    throw new AppError('Insufficient permissions', STATUS.UNAUTHORIZED);
 }
 
 module.exports = isAdmin;
