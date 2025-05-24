@@ -2,7 +2,7 @@ require('dotenv').config();
 
 const jwt = require('jsonwebtoken');
 const crypto = require('crypto');
-const User = require('../models/User');
+const User = require('../models/user');
 const { generateAccessToken, generateRefreshToken } = require('../util/token');
 const asyncHandler = require('../middleware/asyncHandler');
 const logAction = require('../util/logger');
