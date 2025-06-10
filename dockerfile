@@ -8,6 +8,7 @@ RUN npm install
 RUN npm install -g nodemon
 
 COPY controllers/   /app/controllers/
+COPY logs/          /app/logs/
 COPY middleware/    /app/middleware/
 COPY models/        /app/models/
 COPY public/        /app/public/
