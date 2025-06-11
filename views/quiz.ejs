@@ -1,0 +1,35 @@
+<meta name="csrf-token" content="<%= csrfToken %>">
+<h1><%= quiz.title %></h1>
+
+<div id="quiz-container">
+  <div id="timer" style="font-weight: bold; margin-bottom: 10px;"></div>
+  <div id="progress" style="margin-bottom: 10px; font-weight: bold;"></div>
+  <div id="controls" style="margin-bottom: 10px;">
+  <button id="start-btn">▶️ Start</button>
+  <button id="stop-btn">⏸️ Stop</button>
+  <button id="resume-btn">🔁 Resume</button>
+  <button id="giveup-btn">🏳️ Give Up</button>
+</div>
+  <img id="flag-img" src="" alt="Flag" width="300" />
+  <div id="nav-buttons" style="margin: 10px 0;">
+    <button id="prev-btn">⬅️ Prev</button>
+    <button id="next-btn">➡️ Next</button>
+  </div>
+  <form id="quiz-form">
+    <input type="text" id="answer-input" placeholder="Country name" required />
+    <button type="submit">Submit</button>
+    <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+  </form>
+
+  <p id="message"></p>
+</div>
+
+<!-- Inject quiz data as JS object -->
+<script type="application/json" id="quiz-data">
+  <%- JSON.stringify(quiz) %>
+</script>
+<script type="application/json" id="user-data">
+  <%- JSON.stringify(user || null) %>
+</script>
+
+<script src="/js/quiz.js"></script>

@@ -32,6 +32,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 //ALLOW POST
 app.use(express.urlencoded({ extended: true }));
+app.use(express.json());
 
 //COOKIE HANDLING
 app.use(cookieParser());

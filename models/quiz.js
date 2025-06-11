@@ -9,6 +9,7 @@ const quizSchema = new mongoose.Schema({
     title: String,
     description: String,
     category: String,
+    timeLimit: Number,
     questions: [questionSchema]
 });
 
