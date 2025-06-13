@@ -1,17 +1,13 @@
-const User = require("../models/User");
-const asyncHandler = require('../middleware/asyncHandler');
-const logAction = require('../util/logger');
-const AppError = require('../util/AppError');
-const STATUS = require('../util/httpStatus');
-
-const adminDashboard = (req, res) => {
-    res.render('admin')
-}
+const User = require("@models/User");
+const asyncHandler = require('@middleware/asyncHandler');
+const logAction = require('@util/logger');
+const AppError = require('@util/AppError');
+const STATUS = require('@util/httpStatus');
 
 const getUsers = asyncHandler( async (req, res, next) => {
 
     const users = await User.find({}, 'username role active');
-    res.render('admin-users', { users });
+    res.status( STATUS.OK ).json({ users });
 });
 
 const deleteUser = asyncHandler( async (req, res) => {
@@ -24,7 +20,8 @@ const deleteUser = asyncHandler( async (req, res) => {
     await User.findByIdAndDelete(req.params.id);
 
     logAction(req.user?.username || res.locals.user?.username, `Deleted user: ${userToDelete.username}`);
-    res.redirect('/admin/users');
+
+    res.status( STATUS.CREATED ).json({ userToDelete });
 });
 
 const toggleActive = asyncHandler( async (req, res) => {
@@ -38,7 +35,8 @@ const toggleActive = asyncHandler( async (req, res) => {
     await user.save();
 
     logAction(req.user?.username || res.locals.user?.username, `Changed ${user.username} account status to: ${user.active}`);
-    res.redirect('/admin/users');
+
+    res.status( STATUS.OK ).json({ user });
 });
 
 const updateUser = asyncHandler( async (req, res) => {
@@ -64,11 +62,11 @@ const updateUser = asyncHandler( async (req, res) => {
     }
 
     await user.save();
-    res.redirect('/admin/users');
+
+    res.status( STATUS.OK ).json({ user });
 });
 
 module.exports = {
-    adminDashboard,
     getUsers,
     deleteUser,
     toggleActive,

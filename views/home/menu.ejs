@@ -1,0 +1,28 @@
+<div class="display-container">
+    
+    <% if (messages && messages.error) { %>
+        <div class="error"><%= messages.error[0] %></div>
+    <% } %>
+
+    <ul class="menu">
+    <% if (user) { %>
+        <h2>Welcome, <%= user.username %></h2>
+        <% if (user.role === 'admin') { %>
+            <li><a href="/">Home</a></li>
+            <li><a href="/admin/dashboard">Dashboard</a></li>
+            <li><a href="/user/profile">Profile</a></li>
+            <li><a href="/quiz/list">Quizzes</a></li>
+            <li><a href="/quiz/favorites">Favorites</a></li>
+        <% } else { %>
+            <li><a href="/">Home</a></li>
+            <li><a href="/user/profile">Profile</a></li>
+            <li><a href="/quiz/list">Quizzes</a></li>
+            <li><a href="/quiz/favorites">Favorites</a></li>
+        <% } %>
+    <% } else { %>
+        <h2>Welcome</h2>
+        <li><a href="/">Home</a></li>
+        <li><a href="/quiz/list">Quizzes</a></li>
+    <% } %>    
+</ul>
+</div>

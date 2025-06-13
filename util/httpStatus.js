@@ -1,4 +1,9 @@
 module.exports = {
+    //Success
+    OK: 200,
+    CREATED: 201,
+    NO_CONTENT: 204,
+    //Client errors
     BAD_REQUEST: 400,
     UNAUTHORIZED: 401,
     FORBIDEN: 403,

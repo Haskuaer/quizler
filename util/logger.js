@@ -1,7 +1,7 @@
 const fs = require('fs');
 const path = require('path');
 
-const logFile = path.join(__dirname, '../logs/activity.log');
+const logFile = path.join(__dirname, '/logs/activity.log');
 
 function logAction(username, action) {
 

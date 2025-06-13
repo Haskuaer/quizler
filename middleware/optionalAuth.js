@@ -1,6 +1,6 @@
 const jwt = require('jsonwebtoken');
-const User = require('../models/User');
-const { generateAccessToken } = require('../util/token');
+const User = require('@models/User');
+const { generateAccessToken } = require('@util/token');
 
 // Nie używa AppError – nie rzuca błędów
 module.exports = async function optionalAuth(req, res, next) {

@@ -1,18 +1,10 @@
-const User = require('../models/User');
-const asyncHandler = require('../middleware/asyncHandler');
-const logAction = require('../util/logger');
-const STATUS = require('../util/httpStatus');
-const AppError = require('../util/AppError');
+const User = require('@models/User');
+const asyncHandler = require('@middleware/asyncHandler');
+const logAction = require('@util/logger');
+const STATUS = require('@util/httpStatus');
+const AppError = require('@util/AppError');
 
-const getUser = (req, res) => {
-    res.render('user')
-}
-
-const getEditProfile = (req, res) => {
-    res.render('edit-profile');
-}
-
-const postEditProfile = asyncHandler( async (req, res) => {
+const editProfile = asyncHandler( async (req, res) => {
 
     const { username, password } = req.body;
     const user = await User.findById(req.user.id);
@@ -28,11 +20,9 @@ const postEditProfile = asyncHandler( async (req, res) => {
     }
 
     await user.save();
-    res.redirect('/profile');
+    res.status( STATUS.OK ).json({ user });
 });
 
 module.exports = {
-    getUser,
-    getEditProfile,
-    postEditProfile
+    editProfile
 };

@@ -1,0 +1,241 @@
+body {
+  margin: 0;
+  font-family: "Segoe UI", sans-serif;
+  background: #f9f9f9;
+  color: #222;
+}
+
+/* Styl kontenera logowania */
+.display-container {
+    max-width: 400px;
+    margin: 3rem auto;
+    padding: 2rem;
+    border: 1px solid #dee2e6;
+    border-radius: 1rem;
+    background-color: #ffffff;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+}
+
+/* Tytuł formularza */
+.display-container h2 {
+    text-align: center;
+    margin-bottom: 1.5rem;
+    color: #212529;
+}
+
+/* Pola formularza */
+.display-container label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 500;
+    color: #495057;
+}
+
+.display-container input[type="text"],
+.display-container input[type="password"] {
+    width: 100%;
+    padding: 0.6rem;
+    margin-bottom: 1rem;
+    border: 1px solid #ced4da;
+    border-radius: 0.5rem;
+    font-size: 1rem;
+    background-color: #f8f9fa;
+    box-sizing: border-box;
+}
+
+/* Przycisk logowania */
+.display-container button {
+    width: 100%;
+    padding: 0.75rem;
+    font-size: 1rem;
+    background-color: #1d3557;
+    color: white;
+    border: none;
+    border-radius: 0.5rem;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+.display-container button:hover {
+    background-color: #457b9d;
+}
+
+/* Linki dodatkowe */
+.display-container .links {
+    margin-top: 1rem;
+    text-align: center;
+}
+
+.display-container .links a {
+    color: #1d3557;
+    text-decoration: none;
+    font-size: 0.95rem;
+}
+
+.display-container .links a:hover {
+    text-decoration: underline;
+}
+
+/* Błąd */
+.display-container .error {
+    color: #e63946;
+    font-weight: 500;
+    margin-bottom: 1rem;
+    text-align: center;
+}
+
+.display-container ul {
+  list-style: none;
+  text-align: center;
+}
+
+.display-container  ul h2 {
+    margin-top: 0;
+    margin-bottom: 1rem;
+    font-size: 1.25rem;
+    color: #1d3557;
+}
+
+.display-container ul li {
+    margin-bottom: 0.6rem;
+}
+
+.display-container ul a {
+    color: #1d3557;
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.display-container ul a:hover {
+    text-decoration: underline;
+}
+
+
+/* main */
+.header {
+  background: #0d1b42;
+  color: white;
+  padding: 1em 2em;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.header a {
+  color: white;
+  text-decoration: none;
+  margin-left: 1em;
+  font-size: 1.2em;
+}
+
+.logo {
+  font-size: 1.3em;
+  font-weight: bold;
+}
+
+.user {
+  margin-right: 1em;
+  font-weight: bold;
+}
+
+.card-grid {
+  display: flex;
+  justify-content: center;
+  gap: 2em;
+  margin: 2em;
+  flex-wrap: wrap;
+}
+
+.card {
+  background: white;
+  border-radius: 1em;
+  padding: 2em;
+  box-shadow: 0 0 10px rgba(0,0,0,0.1);
+  width: 250px;
+}
+
+.card h2 {
+  margin-top: 0;
+  color: #0d1b42;
+}
+
+.card ul {
+  list-style: none;
+  padding: 0;
+}
+
+.card li {
+  margin: 0.5em 0;
+}
+
+.card a {
+  text-decoration: none;
+  color: #3c4a69;
+}
+
+.main-content {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 2rem;
+    padding: 2rem;
+    background-color: #f8f9fa;
+}
+
+.category-card {
+    background-color: white;
+    border: 1px solid #ced4da;
+    border-radius: 1rem;
+    padding: 1.5rem;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.category-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+/* Ikona */
+.category-card .icon {
+    font-size: 2rem;
+    color: #e63946;
+    margin-bottom: 0.5rem;
+}
+
+/* Tytuł */
+.category-card h3 {
+    margin: 0 0 0.5rem;
+    font-size: 1.25rem;
+    color: #212529;
+}
+
+/* Lista linków */
+.category-card ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.category-card ul li {
+    margin-bottom: 0.4rem;
+}
+
+.category-card ul li a {
+    color: #495057;
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.category-card ul li a:hover {
+    text-decoration: underline;
+}
+
+.footer {
+  background: #0d1b42;
+  color: white;
+  text-align: center;
+  padding: 1em;
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+}

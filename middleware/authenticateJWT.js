@@ -1,9 +1,9 @@
 const jwt = require('jsonwebtoken');
-const STATUS = require('../util/httpStatus');
-const AppError = require('../util/AppError');
-const User = require('../models/User');
+const STATUS = require('@util/httpStatus');
+const AppError = require('@util/AppError');
+const User = require('@models/User');
 const asyncHandler = require('./asyncHandler');
-const { generateAccessToken } = require('../util/token');
+const { generateAccessToken } = require('@util/token');
 
 exports.authenticateJWT = asyncHandler( async(req, res, next) => {
 

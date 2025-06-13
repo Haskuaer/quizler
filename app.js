@@ -1,22 +1,24 @@
+require('module-alias/register');
 require('dotenv').config();
 
 const express = require('express');
 const path = require('path');
 const helmet = require('helmet');
+const mongoose = require('@util/mongodb');
 const csrf = require('csurf');
-const mongoose = require('./util/mongodb');
 const cookieParser = require('cookie-parser');
 const session = require('express-session');
 const flash = require('express-flash');
-const setCsfr = require('./middleware/setCsrf');
-const setUser = require('./middleware/setUser');
+const setCsfr = require('@middleware/setCsrf');
+const setUser = require('@middleware/setUser');
 
 
-//ROUTERS
-const authRouter = require('./routes/auth');
-const adminRouter = require('./routes/admin');
-const userRouter = require('./routes/user');
-const quizRouter = require('./routes/quiz');
+//ROUTES
+const adminRouter = require('@routes/api/admin');
+const authRouter = require('@routes/api/auth');
+const quizRouter = require('@routes/api/quiz');
+const userRouter = require('@routes/api/user');
+const viewRouter = require('@routes/views');
 
 const app = express();
 
@@ -54,11 +56,18 @@ app.use(csrf({ cookie: true }));
 //SET CSRF TOKEN
 app.use(setCsfr);
 
+app.use((req, res, next) => {
+    console.log(`[${req.method}] ${req.originalUrl}`);
+    next();
+});
+
 //ROUTES
-app.use('/', authRouter);
-app.use('/', adminRouter);
-app.use('/', userRouter);
-app.use('/', quizRouter);
+app.use('/api/admin', adminRouter);
+app.use('/api/auth', authRouter);
+app.use('/api/quiz', quizRouter);
+app.use('/api/user', userRouter);
+app.use('/', viewRouter);
+
 
 app.use((req, res) => {
   res.status(404).render('error', {

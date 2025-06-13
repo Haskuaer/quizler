@@ -2,35 +2,12 @@ require('dotenv').config();
 
 const jwt = require('jsonwebtoken');
 const crypto = require('crypto');
-const User = require('../models/User');
-const { generateAccessToken, generateRefreshToken } = require('../util/token');
-const asyncHandler = require('../middleware/asyncHandler');
-const logAction = require('../util/logger');
-const STATUS = require('../util/httpStatus');
-const AppError = require('../util/AppError');
-
-const getHome = (req, res) => {
-    res.render('index');
-};
-
-const getLogin = (req, res) => {
-    res.render('login');
-};
-
-const getRegister = (req, res) => {
-    res.render('register');
-};
-
-const getForgotPassword = (req, res) => {
-    res.render('passwordReset/forgot-password');
-};
-
-const getResetPassword = (req, res) => {
-
-    const token = req.params.token;
-
-    res.render('passwordReset/reset-password', { token: token });
-};
+const User = require('@models/User');
+const { generateAccessToken, generateRefreshToken } = require('@util/token');
+const asyncHandler = require('@middleware/asyncHandler');
+const logAction = require('@util/logger');
+const STATUS = require('@util/httpStatus');
+const AppError = require('@util/AppError');
 
 const login = asyncHandler(async (req, res) => {
 
@@ -39,7 +16,7 @@ const login = asyncHandler(async (req, res) => {
     const user = await User.findOne({ username });
     if (!user || !(await user.comparePassword(password))) {
         req.flash('error', 'Invalid login or password');
-        return res.redirect('/login');
+        return res.status( STATUS.UNAUTHORIZED ).json({ message: 'Invalid login or password' });
     }
 
     const accessToken = generateAccessToken(user);
@@ -63,7 +40,7 @@ const login = asyncHandler(async (req, res) => {
         });
 
     logAction(user.username, 'Logged in');
-    res.redirect('/');
+    res.status( STATUS.OK ).json({ message: 'Logged in' });
 });
 
 const register = asyncHandler (async (req, res) => {
@@ -73,14 +50,14 @@ const register = asyncHandler (async (req, res) => {
     const existing = await User.findOne({ username });
     if (existing) {
         req.flash('error', 'User already exists');
-        return res.redirect('/register');
+        return res.status( STATUS.UNAUTHORIZED ).json({ message: 'User already exists' });
     }
     
     const user = new User({ username, password });
     await user.save();
 
     logAction(user.username, 'Registered');
-    res.render('index', { user });
+    res.status( STATUS.CREATED ).json({ message: 'New user registered' });
 }); 
 
 const refreshToken = asyncHandler(async (req, res) => {
@@ -104,7 +81,8 @@ const refreshToken = asyncHandler(async (req, res) => {
             secure: false,
             maxAge: 15*60*1000 
         });
-    res.sendStatus(204);
+
+    res.status( STATUS.NO_CONTENT );
 });
 
 const logout = (req, res) => {
@@ -112,7 +90,7 @@ const logout = (req, res) => {
     logAction(req.user?.username || res.locals.user?.username, 'Logged out');
     res.clearCookie('token');
     res.clearCookie('refreshToken');
-    res.redirect('/');
+    res.status( STATUS.NO_CONTENT );
 }
 
 const forgotPassword = asyncHandler( async (req, res, next) => {
@@ -126,7 +104,7 @@ const forgotPassword = asyncHandler( async (req, res, next) => {
     await user.save();
 
     logAction(user.username, 'Forgot password');
-    res.render('passwordReset/forgot-link', { link: `/reset-password/${token}`});
+    res.status( STATUS.OK ).json({ link: `/reset-password/${token}` });
 })
 
 const resetPassword = asyncHandler( async ( req, res, next) => {
@@ -145,19 +123,14 @@ const resetPassword = asyncHandler( async ( req, res, next) => {
     await user.save();
 
     logAction(user.username, user.role, 'Reseted password');
-    res.redirect('/login');
+    res.status( STATUS.CREATED ).json({ message: 'Password reseted' });
 })
 
 module.exports = {
-    getHome,
-    getLogin,
-    getRegister,
-    getForgotPassword,
     login,
     register,
     refreshToken,
     logout,
     forgotPassword,
-    getResetPassword,
     resetPassword
 };

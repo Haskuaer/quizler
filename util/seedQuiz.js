@@ -1,5 +1,5 @@
 const mongoose = require('./mongodb');
-const Quiz = require('../models/quiz');
+const Quiz = require('@models/Quiz');
 
 async function seedQuiz() {
   await Quiz.deleteMany({}); // czyść przed seedem

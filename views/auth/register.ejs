@@ -1,0 +1,27 @@
+<div class="display-container">
+    <h2>Register to Quizler</h2>
+    
+    <% if (messages && messages.error) { %>
+        <div class="error"><%= messages.error[0] %></div>
+    <% } %>
+
+    <form action="#" method="POST">
+        <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+        
+        <label for="username">Username:</label>
+        <input type="text" id="username" name="username" required>
+
+        <label for="password">Password:</label>
+        <input type="password" id="password" name="password" required>
+
+        <label for="password">Confirm password:</label>
+        <input type="password" id="confirmPassword" name="password" required>
+
+        <button type="submit">Register</button>
+    </form>
+
+    <div class="links">
+        <a href="/auth/forgot-password" class="js-link">Forgot password?</a><br>
+        <a href="/">Back to homepage</a>
+    </div>
+</div>
