@@ -56,6 +56,7 @@ if (!csrfToken) {
   const stopBtn = document.getElementById('stop-btn');
   const resumeBtn = document.getElementById('resume-btn');
   const giveUpBtn = document.getElementById('giveup-btn');
+  const likeForm = document.getElementById('like-form');
 
   function updateProgress() {
     const correctCount = answeredCorrectly.filter(Boolean).length;
@@ -99,10 +100,6 @@ if (!csrfToken) {
   }
 
   function endQuiz(messageText) {
-
-    console.log('User:', user ? user.id : 'Guest');
-    console.log('Quiz ID: ' + quiz._id);
-    console.log('CSRF token used in fetch:', csrfToken);
 
     clearInterval(timerInterval);
     const correctTotal = answeredCorrectly.filter(Boolean).length;
@@ -163,6 +160,26 @@ if (!csrfToken) {
     } else {
       message.textContent = '❌ Incorrect. Try again.';
     }
+  });
+
+  likeForm.addEventListener('submit', async (e) => {
+
+    console.log('User:', user ? user.id : 'Guest');
+    console.log('Quiz ID: ' + quiz._id);
+    console.log('CSRF token used in fetch:', csrfToken);
+
+    e.preventDefault();
+    const res = await fetch(e.target.action, {
+      method: 'POST',
+      headers: {
+          'Content-Type': 'application/json',
+          'X-CSRF-Token': csrfToken
+      },
+      credentials: 'include'
+    });
+
+    const data = await res.json();
+    alert(data.message);
   });
 
   prevBtn.addEventListener('click', () => {

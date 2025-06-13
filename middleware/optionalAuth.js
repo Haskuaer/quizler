@@ -1,5 +1,5 @@
 const jwt = require('jsonwebtoken');
-const User = require('../models/user');
+const User = require('../models/User');
 const { generateAccessToken } = require('../util/token');
 
 // Nie używa AppError – nie rzuca błędów

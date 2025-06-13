@@ -16,6 +16,10 @@ const userSchema = new mongoose.Schema({
         enum: ['standard', 'admin'],
         default: 'standard'
     },
+    likedQuizzes: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Quiz'
+    }],
     active: {
         type: Boolean,
         default: true
@@ -40,6 +44,6 @@ userSchema.methods.comparePassword = function (candidatePassword) {
     return bcrypt.compare(candidatePassword, this.password);
 };
 
-const User = mongoose.model('User', userSchema);
+const User = mongoose.model.User || mongoose.model('User', userSchema);
 
 module.exports = User;

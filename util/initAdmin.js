@@ -1,4 +1,4 @@
-const User = require('../models/user');
+const User = require('../models/User');
 
 async function initAdmin() {
     const userCount = await User.countDocuments();

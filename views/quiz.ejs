@@ -20,7 +20,10 @@
     <button type="submit">Submit</button>
     <input type="hidden" name="_csrf" value="<%= csrfToken %>">
   </form>
-
+  <form id="like-form" method="POST" action="/quiz/<%= quiz._id %>/like">
+    <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+    <button type="submit" id="like-btn">❤️ Like</button>
+  </form>
   <p id="message"></p>
 </div>
 

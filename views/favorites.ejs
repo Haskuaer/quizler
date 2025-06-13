@@ -1,0 +1,9 @@
+<h1>Your Favorite Quizzes</h1>
+
+<ul>
+  <% quizzes.forEach(q => { %>
+    <li>
+      <a href="/quiz/<%= q._id %>"><%= q.title %></a>
+    </li>
+  <% }) %>
+</ul>

@@ -1,4 +1,4 @@
-const User = require('../models/user');
+const User = require('../models/User');
 const asyncHandler = require('../middleware/asyncHandler');
 const logAction = require('../util/logger');
 const STATUS = require('../util/httpStatus');
