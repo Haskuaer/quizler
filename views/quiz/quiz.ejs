@@ -1,9 +1,9 @@
-<main id="quiz-play">
-  <meta name="csrf-token" content="<%= csrfToken %>">
+<div id="quiz-play">
 
   <h1 id="quiz-title">Loading quiz...</h1>
 
-  <div id="quiz-container" style="display: none;">
+  <div id="quiz-container">
+    <!-- Cała struktura quizu -->
     <div id="timer"></div>
     <div id="progress"></div>
 
@@ -14,17 +14,16 @@
       <button id="giveup-btn">🏳️ Give Up</button>
     </div>
 
-    <img id="flag-img" src="" alt="Flag" width="300" />
+    <img id="flag-img" src="" width="300" />
 
     <div id="nav-buttons">
-      <button id="prev-btn">⬅️ Prev</button>
-      <button id="next-btn">➡️ Next</button>
+      <button id="prev-btn">⬅️</button>
+      <button id="next-btn">➡️</button>
     </div>
 
     <form id="quiz-form">
-      <input type="text" id="answer-input" placeholder="Country name" required />
+      <input type="text" id="answer-input" placeholder="Your answer" required />
       <button type="submit">Submit</button>
-      <input type="hidden" name="_csrf" value="<%= csrfToken %>">
     </form>
 
     <div id="like-section">
@@ -33,6 +32,4 @@
 
     <p id="message"></p>
   </div>
-</main>
-
-<script type="module" src="/js/quiz/quiz.js"></script>
+</div>

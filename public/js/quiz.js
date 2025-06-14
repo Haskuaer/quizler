@@ -1,10 +1,11 @@
 import { apiGet, apiPost } from '/js/api.js';
 
 export async function initQuiz() {
+  
   const query = new URLSearchParams(window.location.search);
   const quizId = query.get('id');
   const csrf = document.querySelector('meta[name="csrf-token"]')?.content;
-
+  
   if (!quizId) {
     document.getElementById('quiz-title').textContent = '❌ Quiz ID not found in URL.';
     return;
@@ -15,6 +16,8 @@ export async function initQuiz() {
     const res = await apiGet(`/api/quiz/${quizId}`);
     quiz = res.quiz;
     document.getElementById('quiz-title').textContent = quiz.title;
+    console.log('✅ quiz.js loaded');
+
   } catch (err) {
     document.getElementById('quiz-title').textContent = '❌ Failed to load quiz.';
     return;
@@ -36,13 +39,35 @@ export async function initQuiz() {
   let paused = false;
   let correct = new Array(quiz.questions.length).fill(false);
 
-  function loadQuestion(i) {
-    const q = quiz.questions[i];
-    flagImg.src = q.imageUrl;
-    input.value = '';
-    updateProgress();
-    message.textContent = correct[i] ? '✔️ Already answered.' : '';
+function loadQuestion(i) {
+  const q = quiz.questions[i];
+  flagImg.src = q.imageUrl;
+  input.value = '';
+  message.textContent = '';
+
+  if (correct[i]) {
+    input.disabled = true;
+    quizForm.querySelector('button[type="submit"]').disabled = true;
+    message.textContent = '✔️ Already answered.';
+  } else {
+    input.disabled = false;
+    quizForm.querySelector('button[type="submit"]').disabled = false;
   }
+
+  updateProgress();
+}
+
+function findNextUnanswered(startIndex, direction = 1) {
+  const total = quiz.questions.length;
+  let i = startIndex;
+
+  for (let attempts = 0; attempts < total; attempts++) {
+    i = (i + direction + total) % total;
+    if (!correct[i]) return i;
+  }
+  return -1; // wszystko odpowiedziane
+}
+
 
   function updateProgress() {
     const count = correct.filter(Boolean).length;

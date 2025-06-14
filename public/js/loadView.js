@@ -31,6 +31,9 @@ async function loadView(viewPath) {
             return;
         } 
 
+        if (viewPath === 'quiz/favorites') {
+            import('/js/favorites.js').then(module => module.initFavorites?.());
+        }   
 
     } catch (err) {
         main.innerHTML = `<p style="color:red;">${err.message}</p>`;

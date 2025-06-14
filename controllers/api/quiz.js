@@ -68,17 +68,23 @@ const likeQuiz = asyncHandler( async (req, res) => {
     res.status( STATUS.OK ).json({ message: `Quiz ${action}` });
 });
 
-const getFavorites = asyncHandler( async (req, res) => {
-    const user = await User.findById(req.user.id).populate('likedQuizzes');
-    res.status( STATUS.OK ).json({ quizzes: user.likedQuizzes });
+const getFavorites = asyncHandler(async (req, res) => {
+    const userId = req.user?.id;
+    if (!userId) throw new AppError('Unauthorized', STATUS.UNAUTHORIZED);
+
+    const user = await User.findById(userId).populate('likedQuizzes');
+    if (!user) throw new AppError('User not found', STATUS.NOT_FOUND);
+
+    res.status(STATUS.OK).json({ quizzes: user.likedQuizzes });
 });
+
 
 const quizController = {
     getAllQuizzes,
+    getFavorites,
     getQuiz,
     submitQuiz,
-    likeQuiz,
-    getFavorites
+    likeQuiz
 };
 
 module.exports = quizController;
