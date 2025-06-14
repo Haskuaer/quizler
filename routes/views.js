@@ -4,6 +4,6 @@ const viewsRender = require('@controllers/views.js')
 
 router.get('/views/:folder/:view', viewsRender.partialRender);
 
-router.get(/^\/(?!api\/|views\/).*$/, viewsRender.home);
+router.get(/^\/(?!api\/|views\/|js\/).*$/, viewsRender.home);
 
 module.exports = router;

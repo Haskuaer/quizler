@@ -16,6 +16,11 @@ async function loadView(viewPath) {
 
         main.innerHTML = html;
         attachFormHandlers(); 
+
+        if (viewPath === 'quiz/list') {
+            import('/js/list.js').then(module => module.initQuizList?.());
+        }
+
     } catch (err) {
         main.innerHTML = `<p style="color:red;">${err.message}</p>`;
     }

@@ -1,73 +1,13 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Lista Quizów</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f4f6f8;
-            padding: 20px;
-        }
-
-        h1 {
-            text-align: center;
-            color: #333;
-        }
-
-        table {
-            margin: 0 auto;
-            border-collapse: collapse;
-            width: 80%;
-            background-color: #fff;
-            box-shadow: 0 0 10px rgba(0,0,0,0.05);
-        }
-
-        th, td {
-            padding: 12px 16px;
-            text-align: left;
-            border-bottom: 1px solid #ddd;
-        }
-
-        th {
-            background-color: #3f51b5;
-            color: white;
-        }
-
-        tr:hover {
-            background-color: #f1f1f1;
-        }
-
-        a.button {
-            text-decoration: none;
-            background-color: #3f51b5;
-            color: white;
-            padding: 8px 12px;
-            border-radius: 4px;
-            font-size: 14px;
-        }
-
-        a.button:hover {
-            background-color: #303f9f;
-        }
-    </style>
-</head>
-<body>
-    <h1>Dostępne Quizy</h1>
-    <table>
+<h1>Quizzes</h1>
+<table>
+    <thead>
         <tr>
-            <th>Tytuł</th>
-            <th>Kategoria</th>
-            <th>Opis</th>
+            <th>Title</th>
+            <th>Category</th>
+            <th>Description</th>
             <th></th>
         </tr>
-        <% for (let quiz of quizzes) { %>
-        <tr>
-            <td><%= quiz.title %></td>
-            <td><%= quiz.category %></td>
-            <td><%= quiz.description %></td>
-            <td><a href="/quiz/<%= quiz._id %>" class="button">Rozwiąż</a></td>
-        </tr>
-        <% } %>
-    </table>
-</body>
-</html>
+    </thead>
+    <tbody id="quiz-table-body">
+    </tbody>
+</table>

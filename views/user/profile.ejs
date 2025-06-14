@@ -1,7 +1,13 @@
-<h2>Profile:</h2>
-<p>Username: <%= user.username %></p>
-<p>Role: <%= user.role %></p>
-<ul>
-    <li><a href='/profile/edit'>Edit profile</a></li>
+<div class="display-container">
+    
+    <% if (messages && messages.error) { %>
+        <div class="error"><%= messages.error[0] %></div>
+    <% } %>
+
+    <h2>Welcome, <%= user.username %></h2>
+
+    <ul class="menu">
+    <li><a href='/user/edit-profile'>Edit profile</a></li>
     <li><a href='/'>Back</a></li>
-</ul>
+    </ul>
+</div>

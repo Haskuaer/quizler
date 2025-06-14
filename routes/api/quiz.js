@@ -4,7 +4,7 @@ const quizController = require('@controllers/api/quiz');
 const optionalAuth = require('@middleware/optionalAuth');
 const { authenticateJWT } = require('@middleware/authenticateJWT');
 
-router.get('/quizzes', quizController.getAllQuizzes);
+router.get('/list', quizController.getAllQuizzes);
 
 router.get('/:id', optionalAuth, quizController.getQuiz);
 

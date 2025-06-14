@@ -1,0 +1,13 @@
+<div class="display-container">
+    
+    <% if (messages && messages.error) { %>
+        <div class="error"><%= messages.error[0] %></div>
+    <% } %>
+
+    <h2><%= user.username %> Dashboard</h2>
+
+    <ul class="menu">
+    <li><a href='/admin/admin-users'>Manage users</a></li>
+    <li><a href='/admin/dashboard'>Back</a></li>
+    </ul>
+</div>

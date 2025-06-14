@@ -1,12 +1,23 @@
-<h1>Edycja profilu</h1>
-<form method="POST" action="/profile/edit">
-  <input type="hidden" name="_csrf" value="<%= csrfToken %>">
-  <label>Nazwa użytkownika:</label><br/>
-  <input name="username" value="<%= user.username %>"/><br/><br/>
+<div class="display-container">
+    <h2>Edit profile</h2>
+    
+    <% if (messages && messages.error) { %>
+        <div class="error"><%= messages.error[0] %></div>
+    <% } %>
 
-  <label>Nowe hasło:</label><br/>
-  <input type="password" name="password" placeholder="Wpisz nowe hasło"/><br/><br/>
+    <form id="edit-profile-form" action="/api/user/edit-profile" method="PATCH" data-api data-redirect="/user/profile">
+      <input type="hidden" name="_csrf" value="<%= csrfToken %>">
 
-  <button type="submit">Zapisz zmiany</button>
-</form>
-<a href="/profile">↩️ Wróć do profilu</a>
+      <label for="username">Username:</label><br/>
+      <input type="text" id="username" name="username" value="<%= user.username %>"/><br/><br/>
+
+      <label for="password">New password:</label><br/>
+      <input type="password" name="password"/><br/><br/>
+
+      <button type="submit">Save changes</button>
+    </form>
+
+    <div class="links">
+        <a href="/">Back to homepage</a>
+    </div>
+</div>
