@@ -1,86 +1,64 @@
-document.addEventListener('DOMContentLoaded', () => {
-  // Read quiz data from DOM
-  const quizDataEl = document.getElementById('quiz-data');
-  if (!quizDataEl) {
-    console.error('Quiz data element not found.');
-    return;
-  }
-  const userData = document.getElementById('user-data');
+import { apiGet, apiPost } from '/js/api.js';
 
-const csrfMeta = document.querySelector('meta[name="csrf-token"]');
-const csrfToken = csrfMeta ? csrfMeta.getAttribute('content') : null;
+export async function initQuiz() {
+  const query = new URLSearchParams(window.location.search);
+  const quizId = query.get('id');
+  const csrf = document.querySelector('meta[name="csrf-token"]')?.content;
 
-if (!csrfToken) {
-  console.error('Missing CSRF token from <meta>!');
-}
-
-  let user;
-  try {
-    user = JSON.parse(userData.textContent);
-  } catch (e) {
-    console.error('Failed to parse user data:', e);
+  if (!quizId) {
+    document.getElementById('quiz-title').textContent = '❌ Quiz ID not found in URL.';
     return;
   }
 
   let quiz;
   try {
-    quiz = JSON.parse(quizDataEl.textContent);
-  } catch (e) {
-    console.error('Failed to parse quiz data:', e);
+    const res = await apiGet(`/api/quiz/${quizId}`);
+    quiz = res.quiz;
+    document.getElementById('quiz-title').textContent = quiz.title;
+  } catch (err) {
+    document.getElementById('quiz-title').textContent = '❌ Failed to load quiz.';
     return;
   }
 
-  if (!quiz || !Array.isArray(quiz.questions)) {
-    console.error('Invalid or missing quiz data.');
-    return;
-  }
-
-  let currentIndex = 0;
-  let timerInterval;
-  let timeLimit = quiz.timeLimit;
-  let timeLeft = timeLimit;
-  let quizStarted = false;
-  let timerPaused = false;
-  let answeredCorrectly = new Array(quiz.questions.length).fill(false);
-
-  const progressDisplay = document.getElementById('progress');
-  const prevBtn = document.getElementById('prev-btn');
-  const nextBtn = document.getElementById('next-btn');
-
-  const flagImg = document.getElementById('flag-img');
-  const form = document.getElementById('quiz-form');
+  const container = document.getElementById('quiz-container');
   const input = document.getElementById('answer-input');
+  const flagImg = document.getElementById('flag-img');
+  const progressDisplay = document.getElementById('progress');
   const message = document.getElementById('message');
+  const quizForm = document.getElementById('quiz-form');
+  const likeBtn = document.getElementById('like-btn');
   const timerDisplay = document.getElementById('timer');
-  const startBtn = document.getElementById('start-btn');
-  const stopBtn = document.getElementById('stop-btn');
-  const resumeBtn = document.getElementById('resume-btn');
-  const giveUpBtn = document.getElementById('giveup-btn');
-  const likeForm = document.getElementById('like-form');
+
+  let index = 0;
+  let timerInterval;
+  let timeLeft = quiz.timeLimit || 60;
+  let quizStarted = false;
+  let paused = false;
+  let correct = new Array(quiz.questions.length).fill(false);
+
+  function loadQuestion(i) {
+    const q = quiz.questions[i];
+    flagImg.src = q.imageUrl;
+    input.value = '';
+    updateProgress();
+    message.textContent = correct[i] ? '✔️ Already answered.' : '';
+  }
 
   function updateProgress() {
-    const correctCount = answeredCorrectly.filter(Boolean).length;
-    progressDisplay.textContent = `✅ Correct: ${correctCount} / ${quiz.questions.length}`;
+    const count = correct.filter(Boolean).length;
+    progressDisplay.textContent = `✅ ${count} / ${quiz.questions.length}`;
   }
 
-  function loadQuestion(index) {
-    const question = quiz.questions[index];
-    flagImg.src = question.imageUrl;
-    input.value = '';
-    message.textContent = answeredCorrectly[index] ? '✔️ Already answered correctly.' : '';
-    updateProgress();
-  }
-
-  function updateTimerDisplay() {
-    timerDisplay.textContent = `⏳ Time Left: ${timeLeft}s`;
+  function updateTimer() {
+    timerDisplay.textContent = `⏳ ${timeLeft}s`;
   }
 
   function startTimer() {
-    updateTimerDisplay();
+    updateTimer();
     timerInterval = setInterval(() => {
-      if (!timerPaused) {
+      if (!paused) {
         timeLeft--;
-        updateTimerDisplay();
+        updateTimer();
         if (timeLeft <= 0) {
           clearInterval(timerInterval);
           endQuiz('⏰ Time’s up!');
@@ -89,135 +67,68 @@ if (!csrfToken) {
     }, 1000);
   }
 
-    function stopTimer() {
-    timerPaused = true;
-  }
-
-  function resumeTimer() {
-    if (timerPaused) {
-      timerPaused = false;
-    }
-  }
-
-  function endQuiz(messageText) {
-
+  function endQuiz(reason) {
     clearInterval(timerInterval);
-    const correctTotal = answeredCorrectly.filter(Boolean).length;
+    const correctTotal = correct.filter(Boolean).length;
 
-    if (user && user.id) {
-      fetch('/submit-quiz', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'X-CSRF-Token': csrfToken
-        },
-        credentials: 'include',
-        body: JSON.stringify({
-          quizId: quiz._id,
-          correctAnswers: correctTotal
-        })
-      })
-      .then(async res => {
-        if (!res.ok) {
-          const text = await res.text();
-          throw new Error(`Server error: ${res.status} - ${text}`);
-        }
-        return res.json();
-      })
-      .then(data => console.log('Result:', data.message))
-      .catch(err => console.error('Error saving result:', err));
+    container.innerHTML = `
+      <h2>${reason}</h2>
+      <p>You scored ${correctTotal} / ${quiz.questions.length}</p>
+    `;
 
-    }
-
-    document.getElementById('quiz-container').innerHTML = `
-      <h2>${messageText}</h2>
-      <p>You answered ${correctTotal} out of ${quiz.questions.length} correctly.</p>
-      `;
+    // Optionally send result to backend
+    apiPost('/api/quiz/submit-quiz', {
+      quizId: quiz._id,
+      correctAnswers: correctTotal
+    }).catch(err => console.warn('Submit failed:', err.message));
   }
 
-  form.addEventListener('submit', (e) => {
-    e.preventDefault();
-    if (!quizStarted || timerPaused) return;
-    if (answeredCorrectly[currentIndex]) return;
-
-    const userAnswer = input.value.trim().toLowerCase();
-    const correct = quiz.questions[currentIndex].answer.trim().toLowerCase();
-
-    if (userAnswer === correct) {
-      answeredCorrectly[currentIndex] = true;
-      updateProgress();
-
-      if (answeredCorrectly.every(Boolean)) {
-        endQuiz('🎉 All questions answered!');
-      } else {
-        let nextIndex = (currentIndex + 1) % quiz.questions.length;
-        while (answeredCorrectly[nextIndex]) {
-          nextIndex = (nextIndex + 1) % quiz.questions.length;
-        }
-        currentIndex = nextIndex;
-        loadQuestion(currentIndex);
-      }
-    } else {
-      message.textContent = '❌ Incorrect. Try again.';
-    }
-  });
-
-  likeForm.addEventListener('submit', async (e) => {
-
-    console.log('User:', user ? user.id : 'Guest');
-    console.log('Quiz ID: ' + quiz._id);
-    console.log('CSRF token used in fetch:', csrfToken);
-
-    e.preventDefault();
-    const res = await fetch(e.target.action, {
-      method: 'POST',
-      headers: {
-          'Content-Type': 'application/json',
-          'X-CSRF-Token': csrfToken
-      },
-      credentials: 'include'
-    });
-
-    const data = await res.json();
-    alert(data.message);
-  });
-
-  prevBtn.addEventListener('click', () => {
-    if (!quizStarted) return;
-
-    let attempts = 0;
-    do {
-      currentIndex = (currentIndex - 1 + quiz.questions.length) % quiz.questions.length;
-      attempts++;
-    } while (answeredCorrectly[currentIndex] && attempts < quiz.questions.length);
-
-    loadQuestion(currentIndex);
-  });
-
-  nextBtn.addEventListener('click', () => {
-    if (!quizStarted) return;
-
-    let attempts = 0;
-    do {
-      currentIndex = (currentIndex + 1) % quiz.questions.length;
-      attempts++;
-    } while (answeredCorrectly[currentIndex] && attempts < quiz.questions.length);
-
-    loadQuestion(currentIndex);
-  });
-
-  startBtn.addEventListener('click', () => {
+  document.getElementById('start-btn').onclick = () => {
     if (!quizStarted) {
       quizStarted = true;
-      loadQuestion(currentIndex);
+      container.style.display = 'block';
+      loadQuestion(index);
       startTimer();
     }
-  });
+  };
 
-  stopBtn.addEventListener('click', () => stopTimer());
-  resumeBtn.addEventListener('click', () => resumeTimer());
-  giveUpBtn.addEventListener('click', () => endQuiz('🚩 You gave up!'));
+  document.getElementById('stop-btn').onclick = () => (paused = true);
+  document.getElementById('resume-btn').onclick = () => (paused = false);
+  document.getElementById('giveup-btn').onclick = () => endQuiz('🏳️ Gave up!');
 
-  // Load first question
-  loadQuestion(currentIndex);
-});
+  document.getElementById('next-btn').onclick = () => {
+    index = (index + 1) % quiz.questions.length;
+    loadQuestion(index);
+  };
+  document.getElementById('prev-btn').onclick = () => {
+    index = (index - 1 + quiz.questions.length) % quiz.questions.length;
+    loadQuestion(index);
+  };
+
+  quizForm.onsubmit = (e) => {
+    e.preventDefault();
+    const answer = input.value.trim().toLowerCase();
+    const correctAnswer = quiz.questions[index].answer.trim().toLowerCase();
+
+    if (answer === correctAnswer) {
+      correct[index] = true;
+      message.textContent = '✅ Correct!';
+      if (correct.every(Boolean)) {
+        endQuiz('🎉 All correct!');
+      } else {
+        document.getElementById('next-btn').click();
+      }
+    } else {
+      message.textContent = '❌ Try again.';
+    }
+  };
+
+  likeBtn.onclick = async () => {
+    try {
+      const res = await apiPost(`/api/quiz/${quiz._id}/like`, {}, csrf);
+      alert(res.message);
+    } catch (err) {
+      alert('Failed to like quiz: ' + err.message);
+    }
+  };
+}

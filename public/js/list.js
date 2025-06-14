@@ -15,7 +15,7 @@ function renderQuizzes(quizzes) {
             <td>${quiz.title}</td>
             <td>${quiz.category}</td>
             <td>${quiz.description}</td>
-            <td><a href="/quiz/${quiz._id}" class="button">Rozwiąż</a></td>
+            <td><a href="/quiz/quiz?id=${quiz._id}" class="js-link button">Try</a></td>
         </tr>
     `).join('');
 }

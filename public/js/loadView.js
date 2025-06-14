@@ -21,6 +21,17 @@ async function loadView(viewPath) {
             import('/js/list.js').then(module => module.initQuizList?.());
         }
 
+        if (viewPath.startsWith('quiz/quiz')) {
+            const res = await fetch('/views/quiz/quiz');
+            const html = await res.text();
+            document.getElementById('main-content').innerHTML = html;
+
+            const module = await import('/js/quiz.js');
+            module.initQuiz?.();
+            return;
+        } 
+
+
     } catch (err) {
         main.innerHTML = `<p style="color:red;">${err.message}</p>`;
     }
